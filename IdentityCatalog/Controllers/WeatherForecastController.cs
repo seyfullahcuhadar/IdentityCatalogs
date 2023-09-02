@@ -1,3 +1,5 @@
+using IdentityCatalog.Models;
+using IdentityCatalog.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IdentityCatalog.Controllers;
@@ -6,6 +8,7 @@ namespace IdentityCatalog.Controllers;
 [Route("[controller]")]
 public class WeatherForecastController : ControllerBase
 {
+    
     private static readonly string[] Summaries = new[]
     {
         "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
@@ -21,6 +24,17 @@ public class WeatherForecastController : ControllerBase
     [HttpGet(Name = "GetWeatherForecast")]
     public IEnumerable<WeatherForecast> Get()
     {
+        var context = new ApplicationDbContext();
+        context.Categories.Add(new Category()
+        {
+            Name = "Deneme",
+            CreatedAt = DateTime.Now,
+            UpdatedAt = DateTime.Now,
+        });
+        context.SaveChanges();
+
+        var categories = context.Categories.ToList();
+        
         return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
                 Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
